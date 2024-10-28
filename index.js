@@ -38,7 +38,6 @@ const server = http.createServer(async (req, res) => {
               }
             }
             break;
-    /* 
           case "PUT":
             console.log(`Processing PUT request for status code: ${req.url}`);
     
@@ -65,7 +64,7 @@ const server = http.createServer(async (req, res) => {
                 res.end("Internal Server Error");
               }
             });
-            break; */
+            break;
     
           /* case "DELETE":
             await fs.promises.rm(image, { force: true });
