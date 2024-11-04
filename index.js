@@ -22,25 +22,24 @@ const server = http.createServer(async (req, res) => {
         switch (req.method) {
           case "GET":
             try {
-              const cachedPicture = await fs.promises.readFile(image);
+              const cachedPicture = await fs.promises.readFile(img);
               res.writeHead(200, { "Content-Type": "image/jpeg" });
               res.end(cachedPicture);
             } catch (err) {
               try {
                 const fetchedPicture = await superagent.get(path);
-                await fs.promises.writeFile(image, fetchedPicture.body);
-                const cachedPicture = await fs.promises.readFile(image);
+                await fs.promises.writeFile(img, fetchedPicture.body);
+                const cachedPicture = await fs.promises.readFile(img);
                 res.writeHead(200, { "Content-Type": "image/jpeg" });
                 res.end(cachedPicture);
               } catch {
                 res.writeHead(404);
-                res.end("Not Found");
+                res.end("NotFound");
               }
             }
             break;
           case "PUT":
             console.log(`Processing PUT request for status code: ${req.url}`);
-    
             let body = [];
             req.on("data", (chunk) => body.push(chunk));
             req.on("end", async () => {
@@ -51,11 +50,10 @@ const server = http.createServer(async (req, res) => {
                 res.end("No image in request body");
                 return;
               }
-    
-              console.log(`Saving image to: ${image}`);
+              console.log(`Saving image to: ${img}`);
     
               try {
-                await fs.promises.writeFile(image, body);
+                await fs.promises.writeFile(img, body);
                 res.writeHead(201, { "Content-Type": "text/plain" });
                 res.end("Image saved");
               } catch (err) {
@@ -65,13 +63,11 @@ const server = http.createServer(async (req, res) => {
               }
             });
             break;
-    
-          /* case "DELETE":
-            await fs.promises.rm(image, { force: true });
+        case "DELETE":
+            await fs.promises.rm(img, { force: true });
             res.writeHead(200);
             res.end();
             break;
-     */
           default:
             res.writeHead(405);
             res.end();
@@ -81,7 +77,6 @@ const server = http.createServer(async (req, res) => {
         res.end("Error with processing the request");
       }
     });
-    
     server.listen(port, host, () => {
       console.log(`Server running at http://${host}:${port}/`);
     });
